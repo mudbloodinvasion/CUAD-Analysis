@@ -1,0 +1,11 @@
+.env
+__pycache__/
+*.pyc
+.venv/
+venv/
+data/*.json
+data/*.pdf
+data/*.txt
+*.index
+.faiss
+*.pdf

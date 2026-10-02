@@ -1,0 +1,39 @@
+llm:
+  model: "gemini-3.1-flash-lite"
+  temperature: 0
+  max_output_tokens: 2048
+
+embeddings:
+  model: "sentence-transformers/all-MiniLM-L6-v2"
+
+retrieval:
+  top_k: 5
+
+document:
+  chunk_size: 1200
+  chunk_overlap: 150
+
+risk_levels:
+  high:
+    - Uncapped Liability
+    - Liquidated Damages
+    - Non-Compete
+    - Exclusivity
+    - Irrevocable Or Perpetual License
+    - Unlimited/All-You-Can-Eat-License
+
+  medium:
+    - Anti-Assignment
+    - Change Of Control
+    - Termination For Convenience
+    - Minimum Commitment
+    - Volume Restriction
+    - Audit Rights
+    - Insurance
+
+  low:
+    - Document Name
+    - Parties
+    - Agreement Date
+    - Effective Date
+    - Governing Law

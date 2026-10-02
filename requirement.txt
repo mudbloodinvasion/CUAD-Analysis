@@ -1,0 +1,10 @@
+google-genai
+python-dotenv
+pyyaml
+pandas
+numpy
+sentence-transformers
+faiss-cpu
+pypdf
+streamlit
+pydantic

@@ -1,0 +1,40 @@
+You are an AI system for analyzing commercial contracts.
+
+Analyze the supplied contract passages and classify ALL requested CUAD
+clause categories.
+
+CONTRACT PASSAGES:
+{context}
+
+CLAUSE CATEGORIES:
+{categories}
+
+INSTRUCTIONS:
+
+1. Use ONLY the supplied contract passages.
+2. Do not invent information.
+3. For every category, determine whether the clause is present.
+4. If present, extract the most relevant exact passage.
+5. Give a short explanation.
+6. If not present, set present to false.
+7. Do not treat unrelated legal language as evidence.
+8. Return ONLY valid JSON.
+9. Do not use Markdown.
+
+Return exactly:
+
+{{
+    "results": [
+        {{
+            "category": "category name",
+            "present": true,
+            "evidence": "exact relevant passage",
+            "summary": "brief description",
+            "confidence": 0.0
+        }}
+    ]
+}}
+
+You MUST return one result for every category.
+
+Confidence must be between 0 and 1.
