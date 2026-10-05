@@ -105,14 +105,14 @@ This also helps identify contracts where text extraction may be problematic.
 - Confidence score
 7. Can ask questions
 
-# Tech Stack used 
+# Tech Stack
 Python , Streamlit , FAISS , Transformers , Numpy , PYPDF
 
 # Installation 
 git clone <your-repository-url>
 cd "CUAD ANALYSIS"
 
-Install dependecy 
+Install dependency 
 pip install -r requirement.txt
 
 # Challenges Overcomed 
@@ -132,18 +132,18 @@ Sentence Transformer embeddings allow the system to perform semantic similarity 
 Solution 
 The system uses: Chunking + Embedding + FAISS Retrieval. Only relevant passages are provided to Gemini.
 
-# Limitaion
-1.OCR Is Not Currently Implemented
-2.The current High/Medium/Low mapping is a project-defined baseline and should not be treated as professional legal risk scoring.
-3.Semantic retrieval may occasionally miss relevant clauses in very long or complex contracts.
+# Limitation
+1. OCR Is Not Currently Implemented
+2. The current High/Medium/Low mapping is a project-defined baseline and should not be treated as professional legal risk scoring.
+3. Semantic retrieval may occasionally miss relevant clauses in very long or complex contracts.
 
 # Advantages 
-1.The system searches by meaning rather than only matching keywords.
-2.Detected clauses include supporting contract passages.
-3.JSON-based responses make the results easier to process and display.
-4.The system uses an established commercial contract clause taxonomy.
-5.The application goes beyond individual clauses and produces an overall contract assessment.
-6.Users can ask natural-language questions about the uploaded contract
+1. The system searches by meaning rather than only matching keywords.
+2. Detected clauses include supporting contract passages.
+3. JSON-based responses make the results easier to process and display.
+4. The system uses an established commercial contract clause taxonomy.
+5. The application goes beyond individual clauses and produces an overall contract assessment.
+6. Users can ask natural-language questions about the uploaded contract
 
 # Disclaimer 
 ONly for Educational Purposes .
