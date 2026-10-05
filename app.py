@@ -6,21 +6,12 @@ from src.documentloader import (
 )
 
 from src.pipeline import ContractRiskPipeline
-
-
-# --------------------------------------------------
 # PAGE CONFIGURATION
-# --------------------------------------------------
-
 st.set_page_config(
     page_title="Contract Risk Analysis System",
     page_icon="📄",
     layout="wide"
 )
-# --------------------------------------------------
-# PINK THEME
-# --------------------------------------------------
-
 st.markdown(
     """
     <style>
@@ -39,7 +30,6 @@ st.markdown(
     [data-testid="stCaptionContainer"] {
         color: #4a2633 !important;
     }
-
     .stButton > button {
         background-color: #e91e63 !important;
         color: #ffffff !important;
@@ -48,7 +38,6 @@ st.markdown(
         padding: 0.55rem 1.25rem !important;
         font-weight: 700 !important;
     }
-
     .stButton > button:hover {
         background-color: #c2185b !important;
         color: #ffffff !important;
@@ -60,12 +49,9 @@ st.markdown(
         border-radius: 14px !important;
         padding: 12px !important;
     }
-
     [data-testid="stFileUploader"] * {
         color: #4a2633 !important;
     }
-
-    /* Force typed text to be visible in Chrome/Streamlit */
     [data-testid="stTextInput"] input {
         background-color: #fff7fa !important;
         color: #4a2633 !important;
@@ -74,13 +60,11 @@ st.markdown(
         border: 1px solid #f48fb1 !important;
         border-radius: 9px !important;
     }
-
     [data-testid="stTextInput"] input::placeholder {
         color: #9e6b7d !important;
         -webkit-text-fill-color: #9e6b7d !important;
         opacity: 1 !important;
     }
-
     [data-testid="stTextInput"] input:focus {
         background-color: #ffffff !important;
         color: #4a2633 !important;
@@ -88,7 +72,6 @@ st.markdown(
         border-color: #e91e63 !important;
         box-shadow: 0 0 0 1px #e91e63 !important;
     }
-
     textarea {
         background-color: #fff7fa !important;
         color: #4a2633 !important;
@@ -96,21 +79,16 @@ st.markdown(
         caret-color: #e91e63 !important;
         border-color: #f48fb1 !important;
     }
-
     textarea::placeholder {
         color: #9e6b7d !important;
         -webkit-text-fill-color: #9e6b7d !important;
         opacity: 1 !important;
     }
-
     [data-testid="stExpander"] {
         background-color: #fff7fa !important;
         border: 1px solid #f48fb1 !important;
         border-radius: 11px !important;
     }
-
-    /* Extracted page text: Streamlit st.text() renders as <pre>.
-       Force a light pink background and visible burgundy text. */
     .extracted-page-text {
         background-color: #fff7fa !important;
         color: #4a2633 !important;
@@ -149,88 +127,49 @@ st.markdown(
         border-radius: 12px !important;
         padding: 15px !important;
     }
-
     [data-testid="stMetricLabel"] { color: #7a4055 !important; }
     [data-testid="stMetricValue"] { color: #ad1457 !important; }
-
     [data-testid="stAlert"] { border-radius: 10px !important; }
-
     pre, code { color: #4a2633 !important; }
-
     hr { border-color: #f8bbd0 !important; }
-
     a { color: #c2185b !important; }
     </style>
     """,
     unsafe_allow_html=True
 )
-
-# --------------------------------------------------
-# TITLE
-# --------------------------------------------------
-
 st.title(
     "📄 Contract Risk Analysis System"
 )
-
 st.write(
     """
     AI-powered commercial contract analysis using:
-
     **CUAD + Sentence Transformers + FAISS + Gemini**
     """
 )
-
-
-# --------------------------------------------------
-# LOAD PIPELINE
-# --------------------------------------------------
-
+# LOAD PIPELIN
 @st.cache_resource
 def load_pipeline():
-
     return ContractRiskPipeline()
-
-
 try:
-
     pipeline = load_pipeline()
-
 except Exception as e:
-
     st.error(
         "Failed to initialize the analysis pipeline."
     )
-
     st.exception(e)
-
     st.stop()
-
-
-# --------------------------------------------------
 # FILE UPLOAD
-# --------------------------------------------------
-
 uploaded_file = st.file_uploader(
     "Upload a contract",
     type=["pdf", "txt"]
 )
-
-
-# ==================================================
 # PROCESS UPLOADED CONTRACT
-# ==================================================
-
 if uploaded_file:
 
     st.success(
         f"Uploaded: {uploaded_file.name}"
     )
-
-    # --------------------------------------------------
     # DETERMINE FILE TYPE
-    # --------------------------------------------------
-
     file_extension = (
         uploaded_file.name
         .split(".")[-1]
@@ -240,105 +179,70 @@ if uploaded_file:
     temp_path = (
         f"temp_contract.{file_extension}"
     )
-
-    # --------------------------------------------------
-    # SAVE TEMPORARY FILE
-    # --------------------------------------------------
-
+    # SAVE TEMPORARY fILE
     with open(
         temp_path,
         "wb"
     ) as file:
-
         file.write(
             uploaded_file.getbuffer()
         )
-
-    # --------------------------------------------------
     # EXTRACT DOCUMENT
-    # --------------------------------------------------
-
-    try:
-
+  try:
         contract_text = load_document(
             temp_path
         )
-
     except Exception as e:
-
         st.error(
             "Could not extract text from the contract."
         )
-
         st.exception(e)
-
         st.stop()
-
-    # ==================================================
     # DOCUMENT EXTRACTION REPORT
-    # ==================================================
-
     st.divider()
-
     st.header(
         "📄 Document Extraction Report"
     )
-
     extraction_report = (
         get_extraction_report()
     )
-
     if extraction_report:
-
-        # --------------------------------------------------
         # SUMMARY METRICS
-        # --------------------------------------------------
-
-        total_pages = (
+       total_pages = (
             extraction_report[
                 "total_pages"
             ]
         )
-
         pages_with_text = (
             extraction_report[
                 "pages_with_text"
             ]
         )
-
         pages_without_text = (
             extraction_report[
                 "pages_without_text"
             ]
         )
-
         col1, col2, col3 = st.columns(3)
-
         with col1:
 
             st.metric(
                 "Total Pages",
                 total_pages
             )
-
         with col2:
 
             st.metric(
                 "Pages Extracted",
                 pages_with_text
             )
-
         with col3:
 
             st.metric(
                 "Pages Without Text",
                 pages_without_text
             )
-
-        # --------------------------------------------------
-        # EXTRACTION STATUS
-        # --------------------------------------------------
-
+        # EXTRACTION STATUS-
         if pages_without_text == 0:
 
             st.success(
@@ -352,89 +256,65 @@ if uploaded_file:
                 f"⚠️ {pages_without_text} page(s) "
                 "had no extractable text."
             )
-
-        # ==================================================
         # PAGE-BY-PAGE TEXT
-        # ==================================================
-
         st.subheader(
             "📑 Page-by-Page Extracted Text"
         )
-
         for page in extraction_report[
             "pages"
         ]:
-
             page_number = page[
                 "page_number"
             ]
-
             characters = page[
                 "characters"
             ]
-
             has_text = page[
                 "has_text"
             ]
-
             with st.expander(
                 f"Page {page_number} — "
                 f"{characters:,} characters"
             ):
-
                 if has_text:
 
                     st.markdown(
                         f"""<div class=\"extracted-page-text\">{html.escape(page["text"])}</div>""",
                         unsafe_allow_html=True
                     )
-
                 else:
-
-                    st.warning(
+                 st.warning(
                         "No extractable text was "
                         "found on this page. "
                         "It may be a scanned/image page."
                     )
-
     else:
-
         st.warning(
             "Extraction report is not available."
         )
 
-    # ==================================================
     # ANALYZE CONTRACT
-    # ==================================================
-
     st.divider()
-
     st.header(
         "🔍 Contract Analysis"
     )
-
     st.write(
         "The system will analyze the contract against "
         "the 41 CUAD clause categories."
     )
-
     if st.button(
         "🔍 Analyze Contract",
         type="primary"
     ):
-
         with st.spinner(
             "Analyzing contract with Gemini..."
         ):
-
             try:
-
                 result = (
                     pipeline.analyze_contract(
                         contract_text
                     )
                 )
-
                 st.session_state[
                     "analysis"
                 ] = result
@@ -442,31 +322,20 @@ if uploaded_file:
                 st.success(
                     "✅ Contract analysis completed!"
                 )
-
             except Exception as e:
-
                 st.error(
                     "Contract analysis failed."
                 )
-
-                st.exception(e)
-
-
-# ==================================================
+               st.exception(e)
 # DISPLAY ANALYSIS RESULTS
-# ==================================================
-
 if "analysis" in st.session_state:
-
     result = st.session_state[
         "analysis"
     ]
-
     report = result.get(
         "contract_report",
         {}
     )
-
     if not isinstance(report, dict):
         report = {
             "contract_summary": str(report),
@@ -477,21 +346,12 @@ if "analysis" in st.session_state:
             "human_review_priorities": [],
             "overall_reasoning": ""
         }
-
-    # ==================================================
     # CONTRACT RISK REPORT
-    # ==================================================
-
     st.divider()
 
     st.header(
         "📊 Contract Risk Report"
     )
-
-    # --------------------------------------------------
-    # OVERALL RISK
-    # --------------------------------------------------
-
     overall_risk = report.get(
         "overall_risk",
         "UNKNOWN"
@@ -505,15 +365,9 @@ if "analysis" in st.session_state:
         "Risk Level",
         overall_risk
     )
-
-    # --------------------------------------------------
-    # CONTRACT SUMMARY
-    # --------------------------------------------------
-
     st.subheader(
-        "📋 Contract Summary"
+        "📋 Contract Summary"             #CONTRACT SUMMARY
     )
-
     st.write(
         report.get(
             "contract_summary",
@@ -521,11 +375,7 @@ if "analysis" in st.session_state:
         )
     )
 
-    # --------------------------------------------------
-    # KEY RISKS
-    # --------------------------------------------------
-
-    st.subheader(
+    st.subheader(                           #KEY RISKS
         "⚠️ Key Risks"
     )
 
@@ -533,7 +383,6 @@ if "analysis" in st.session_state:
         "key_risks",
         []
     )
-
     if key_risks:
 
         for risk in key_risks:
@@ -542,12 +391,10 @@ if "analysis" in st.session_state:
                 risk,
                 dict
             ):
-
                 category = risk.get(
                     "category",
                     "Risk"
                 )
-
                 reason = risk.get(
                     "reason",
                     risk.get(
@@ -555,58 +402,38 @@ if "analysis" in st.session_state:
                         str(risk)
                     )
                 )
-
                 st.write(
                     f"**{category}**"
                 )
-
                 st.write(
                     reason
                 )
-
             else:
 
                 st.write(
                     f"• {risk}"
                 )
-
     else:
-
         st.write(
             "No major risks reported."
         )
-
-    # --------------------------------------------------
-    # IMPORTANT OBLIGATIONS
-    # --------------------------------------------------
-
     st.subheader(
         "📌 Important Obligations"
     )
-
     obligations = report.get(
         "important_obligations",
         []
     )
-
     if obligations:
 
         for obligation in obligations:
-
             st.write(
                 f"• {obligation}"
             )
-
     else:
-
         st.write(
             "No obligations identified."
         )
-
-    # --------------------------------------------------
-    # IMPORTANT DATES
-    # --------------------------------------------------
-
     st.subheader(
         "📅 Important Dates"
     )
@@ -615,254 +442,152 @@ if "analysis" in st.session_state:
         "important_dates",
         []
     )
-
     if dates:
-
         for date in dates:
-
             st.write(
                 f"• {date}"
             )
-
     else:
-
         st.write(
             "No important dates identified."
         )
-
-    # --------------------------------------------------
-    # HUMAN REVIEW
-    # --------------------------------------------------
-
     st.subheader(
         "👤 Human Review Priorities"
     )
-
     priorities = report.get(
         "human_review_priorities",
         []
     )
-
     if priorities:
-
         for priority in priorities:
-
             st.write(
                 f"• {priority}"
             )
-
     else:
-
         st.write(
             "No specific review priorities identified."
         )
-
-    # --------------------------------------------------
-    # OVERALL REASONING
-    # --------------------------------------------------
-
     st.subheader(
         "🧠 Overall Reasoning"
     )
-
     st.write(
         report.get(
             "overall_reasoning",
             "No reasoning available."
         )
     )
-
-    # ==================================================
-    # CLAUSE-LEVEL ANALYSIS
-    # ==================================================
-
     st.divider()
-
     st.header(
         "🔎 Clause-Level Analysis"
     )
-
     clause_results = result.get(
         "clause_results",
         []
     )
-
     if not clause_results:
-
         st.warning(
             "No clause-level results were returned."
         )
-
     else:
-
         for item in clause_results:
-
             category = item.get(
                 "category",
                 "Unknown Category"
             )
-
             clause = item.get(
                 "clause_analysis",
                 {}
             )
-
             risk = item.get(
                 "risk_analysis",
                 {}
             )
-
             with st.expander(
                 f"📑 {category}"
             ):
-
-                # ------------------------------------------
-                # PRESENCE
-                # ------------------------------------------
-
                 present = clause.get(
                     "present",
                     False
                 )
-
                 st.write(
                     f"**Clause Present:** {present}"
                 )
-
-                # ------------------------------------------
-                # EVIDENCE
-                # ------------------------------------------
-
                 evidence = clause.get(
                     "evidence",
                     ""
                 )
-
                 if evidence:
 
                     st.write(
                         "**Evidence:**"
                     )
-
                     st.info(
                         evidence
                     )
-
-                # ------------------------------------------
-                # SUMMARY
-                # ------------------------------------------
-
                 summary = clause.get(
                     "summary",
                     ""
                 )
-
                 if summary:
-
                     st.write(
                         "**Clause Summary:**"
                     )
-
                     st.write(
                         summary
                     )
-
-                # ------------------------------------------
-                # CONFIDENCE
-                # ------------------------------------------
-
                 confidence = clause.get(
                     "confidence",
                     0
                 )
-
                 st.write(
                     f"**Classification Confidence:** "
                     f"{confidence}"
                 )
-
-                # ------------------------------------------
-                # RISK LEVEL
-                # ------------------------------------------
-
                 risk_level = risk.get(
                     "risk_level",
                     "NONE"
                 )
-
                 st.write(
                     f"**Risk Level:** {risk_level}"
                 )
-
-                # ------------------------------------------
-                # RISK REASON
-                # ------------------------------------------
-
                 risk_reason = risk.get(
                     "risk_reason",
                     ""
                 )
-
                 if risk_reason:
-
                     st.write(
                         "**Risk Reason:**"
                     )
-
                     st.write(
                         risk_reason
                     )
-
-                # ------------------------------------------
-                # PROBLEMATIC ELEMENTS
-                # ------------------------------------------
-
                 problematic = risk.get(
                     "problematic_elements",
                     []
                 )
-
                 if problematic:
-
                     st.write(
                         "**Potential Issues:**"
                     )
-
-                    for issue in problematic:
-
+                   for issue in problematic:
                         st.write(
                             f"• {issue}"
                         )
-
-                # ------------------------------------------
-                # REVIEW RECOMMENDATION
-                # ------------------------------------------
-
                 recommendation = risk.get(
                     "review_recommendation",
                     ""
                 )
-
                 if recommendation:
-
                     st.write(
                         "**Review Recommendation:**"
                     )
-
                     st.write(
                         recommendation
                     )
-
-    # ==================================================
-    # CONTRACT Q&A
-    # ==================================================
-
     st.divider()
-
     st.header(
         "💬 Ask the Contract"
     )
-
     question = st.text_input(
         "Ask a question about this contract:",
         placeholder=(
@@ -870,80 +595,61 @@ if "analysis" in st.session_state:
             "is terminated?"
         )
     )
-
     if st.button(
         "Ask Question"
     ):
-
         if not question.strip():
 
             st.warning(
                 "Please enter a question."
             )
-
         else:
-
             with st.spinner(
                 "Searching the contract..."
             ):
-
                 try:
-
-                    answer = (
+                   answer = (
                         pipeline.answer_question(
                             question
                         )
                     )
-
                     if "error" in answer:
-
                         st.error(
                             answer["error"]
                         )
-
                     else:
-
                         st.subheader(
                             "Answer"
                         )
-
                         st.write(
                             answer.get(
                                 "answer",
                                 ""
                             )
                         )
-
                         st.subheader(
                             "Evidence"
                         )
-
                         st.info(
                             answer.get(
                                 "evidence",
                                 ""
                             )
                         )
-
                         confidence = answer.get(
                             "confidence",
                             0
                         )
-
                         try:
                             confidence = float(confidence)
                         except (TypeError, ValueError):
                             confidence = 0.0
-
                         st.write(
                             f"Confidence: "
                             f"{confidence:.2f}"
                         )
-
                 except Exception as e:
-
                     st.error(
                         "Question answering failed."
                     )
-
                     st.exception(e)
