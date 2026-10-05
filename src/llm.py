@@ -32,9 +32,7 @@ class GeminiAnalyzer:
 
         self.prompt_dir = Path("prompts")
 
-    # --------------------------------------------------
-    # LOAD PROMPT
-    # --------------------------------------------------
+   
 
     def _load_prompt(
         self,
@@ -56,10 +54,6 @@ class GeminiAnalyzer:
         return template.format(
             **kwargs
         )
-
-    # --------------------------------------------------
-    # GENERATE JSON
-    # --------------------------------------------------
 
     def _generate_json(
         self,
@@ -101,10 +95,6 @@ class GeminiAnalyzer:
                 "raw_output": output
             }
 
-    # --------------------------------------------------
-    # BATCH CLAUSE ANALYSIS
-    # --------------------------------------------------
-
     def analyze_clauses(
         self,
         categories,
@@ -144,10 +134,6 @@ class GeminiAnalyzer:
         return self._generate_json(
             prompt
         )
-
-    # --------------------------------------------------
-    # QUESTION ANSWERING
-    # --------------------------------------------------
 
     def answer_question(
         self,
